@@ -3,7 +3,7 @@ import gensim
 import numpy as np
 import pandas as pd
 
-from utils import *
+from utils import split_str
 np.random.seed(42)
 
 if __name__ == '__main__':

@@ -1,17 +1,26 @@
 import sys
 import pickle
-from utils import split_str
+from utils import split_str, flatten_lists
 
-with open(sys.argv[1], 'rb') as h:
-    data = pickle.load(h)
+def predict_health_cb(data, vectoriser, classifier):
+    """Predict health labels for CB.
 
-with open('../models/vectoriser.pickle', 'rb') as h:
-    vec = pickle.load(h)
+    Args:
+        data (:obj:`list` of :obj:`tuple`): Crunchbase IDs and list of
+            categories.
+    Return:
+        output(:obj:`list` of :obj:`dict`): Crunchbase IDS and bool.
 
-with open('../models/clf.pickle', 'rb') as h:
-    clf = pickle.load(h)
+    """
+    with open(vectoriser, 'rb') as h:
+        vec = pickle.load(h)
 
-labels = clf.predict(vec.transform(data))
+    with open(classifier, 'rb') as h:
+        clf = pickle.load(h)
 
-with open('../data/output/labels.pickle', 'wb') as h:
-    pickle.dump(labels, h)
+    # Store index.
+    data_idx = [tup[0] for tup in data]
+    labels = gs.predict(vec.transform(flatten_lists([tup[1] for tup in data])))
+
+    return [{'id':id_, 'is_health':pred}
+                for id_, pred in zip(data_idx, labels)]
