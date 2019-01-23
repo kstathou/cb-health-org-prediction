@@ -1,4 +1,3 @@
-import sys
 import pickle
 from utils import split_str, flatten_lists
 
@@ -20,7 +19,7 @@ def predict_health_cb(data, vectoriser, classifier):
 
     # Store index.
     data_idx = [tup[0] for tup in data]
-    labels = gs.predict(vec.transform(flatten_lists([tup[1] for tup in data])))
+    labels = clf.predict(vec.transform(flatten_lists([tup[1] for tup in data])))
 
     return [{'id':id_, 'is_health':pred}
                 for id_, pred in zip(data_idx, labels)]
